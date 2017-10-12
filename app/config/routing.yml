@@ -1,0 +1,7 @@
+p4_booking:
+    resource: "@P4BookingBundle/Resources/config/routing.yml"
+    prefix:   /
+
+app:
+    resource: '@AppBundle/Controller/'
+    type: annotation

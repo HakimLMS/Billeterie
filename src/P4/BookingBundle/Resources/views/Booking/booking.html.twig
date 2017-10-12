@@ -1,0 +1,10 @@
+{% extends 'P4BookingBundle::layout.html.twig' %}
+{% block form %}
+{{ form(form) }}
+  
+{{form_row(form.ticket)}}
+<a href="#" id="add_ticket" class="btn btn-default">Ajouter un Ticket</a>
+{% endblock %}
+{% block script %}
+    <script src='../public/booking.js'></script>
+{% endblock %}

@@ -1,0 +1,7 @@
+p4_booking_homepage:
+    path:     /
+    defaults: { _controller: P4BookingBundle:Booking:index }
+
+p4_booking_books:
+    path:     /book
+    defaults: {_controller: P4BookingBundle:Booking:book }
