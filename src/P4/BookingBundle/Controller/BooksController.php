@@ -43,20 +43,32 @@ class BooksController extends Controller
     {
         $book = new Books();
         $form = $this->get('form.factory')->create(BooksType::class,$book);
-        
+        $em = $this->getDoctrine()->getManager();
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid())
         {
+            //utilisation service checkschedule
+            $checkschedule = $this->container->get('CheckSchedule');
+            $date = $book->getDate();
+            $scheduled = $em->getRepository('P4BookingBundle:Schedule')->findBy($date);   
+            $count =  $scheduled->getCount();
+                    
+            if ($checkschedule->isFree($date, $count) != true )
+            {
+                //variables session plus message flashbag donnat le nombre de places restantes pour la date prévue
+            }
+            
+            
         $formticket = clone $book->getTicket();    
         $book->getTicket()->clear();
         
-        $em = $this->getDoctrine()->getManager();
+        
         $em->persist($book);
         $em->flush();
         
         
         foreach( $formticket as $t)
             {    
-                $t->setBooks0($book);
+                $t->setBooks($book);
                 $book->addTicket($t);
                 $em->persist($t);
             }

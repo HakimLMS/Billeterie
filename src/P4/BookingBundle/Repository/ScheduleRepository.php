@@ -1,6 +1,8 @@
 <?php
 
+
 namespace P4\BookingBundle\Repository;
+
 
 /**
  * ScheduleRepository
@@ -10,4 +12,14 @@ namespace P4\BookingBundle\Repository;
  */
 class ScheduleRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findBy($date)
+    {
+        $qb = $this->_em->createQueryBuilder()
+                ->select('a')
+                ->from('schedule')
+                ->where('a.date = :date');
+        
+        return $qb->getQuery()
+                ->getResult();
+    }
 }
