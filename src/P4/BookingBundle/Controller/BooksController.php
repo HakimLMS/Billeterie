@@ -7,9 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
-use P4\BookingBundle\Form\BooksType;
-use P4\BookingBundle\Entity\Tickets;
-use P4\BookingBundle\Form\TicketsType;
+use P4\BookingBundle\Form\Type\BooksType;
 
 /**
  * Book controller.
@@ -38,7 +36,7 @@ class BooksController extends Controller
     /**
      * Creates a new book entity.
      *
-     * @Route("/new", name="books_new")
+     * @Route("/book", name="books_new")
      * @Method({"GET", "POST"})
      */
     public function newAction(Request $request)
@@ -48,21 +46,24 @@ class BooksController extends Controller
         
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid())
         {
-        $book->getTicket()->clear();    
+        $formticket = clone $book->getTicket();    
+        $book->getTicket()->clear();
+        
         $em = $this->getDoctrine()->getManager();
         $em->persist($book);
         $em->flush();
         
-        $formticket = $form->get('ticket')->getData();
+        
         foreach( $formticket as $t)
             {    
-                $t->setBook($book);
+                $t->setBooks0($book);
                 $book->addTicket($t);
                 $em->persist($t);
             }
+        $em->flush();    
         }
  
-        $em->flush();
+        
         
         
         return $this->render('P4BookingBundle:Booking:booking.html.twig', array('book' => $book, 'form' => $form->createView()));

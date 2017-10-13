@@ -1,6 +1,6 @@
 <?php
 
-namespace P4\BookingBundle\Form;
+namespace P4\BookingBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;

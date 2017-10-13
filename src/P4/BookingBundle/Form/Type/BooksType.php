@@ -1,6 +1,6 @@
 <?php
 
-namespace P4\BookingBundle\Form;
+namespace P4\BookingBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -11,7 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use P4\BookingBundle\Form\TicketsType;
+use P4\BookingBundle\Form\Type\TicketsType;
 
 class BooksType extends AbstractType
 {
