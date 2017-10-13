@@ -44,10 +44,16 @@ class Tickets
     private $discount;
     
     /**
-     * @ORM\ManyToOne(targetEntity="P4\BookingBundle\Entity\Books", inversedBy="tickets")
+     * @ORM\ManyToOne(targetEntity="P4\BookingBundle\Entity\Books", inversedBy="tickets", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $books;
+    
+    /**
+     *
+     * @var type int
+     */
+    private $book_id;
 
     
     /**
@@ -141,7 +147,7 @@ class Tickets
      */
     public function setBooks(Books $book)
     {
-        $this->book = $book;
+        $this->books = $book;
 
         return $this;
     }
@@ -153,6 +159,6 @@ class Tickets
      */
     public function getBooks()
     {
-        return $this->book;
+        return $this->books;
     }
 }

@@ -5,7 +5,6 @@ namespace P4\BookingBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use P4\BookingBundle\Entity\Books;
 use P4\BookingBundle\Form\BooksType;
-use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 
 class BookingController extends Controller
@@ -22,8 +21,17 @@ class BookingController extends Controller
         
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid())
         {
+        $book->getTicket()->clear();    
         $em = $this->getDoctrine()->getManager();
         $em->persist($book);
+        $em->flush();
+        
+        foreach( $form->get('ticket')->getData() as $t)
+        {    
+            $t->setBook($book);
+            $em->persist($t);
+        }
+        
         $em->flush();
         }
         
