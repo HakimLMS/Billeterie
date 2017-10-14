@@ -1,23 +1,35 @@
 <?php
 
+use Doctrine\ORM\EntityManager;
+
 namespace P4\BookingBundle\CheckSchedule;
 
 class CheckSchedule
 {
-    public function isFree($date, $count)
+    private $repo;
+    
+    public function __construct(\P4\BookingBundle\Repository\ScheduleRepository $repo)
     {
-        $repo = $this
-                ->getDoctrine()
-                ->getManager()
-                ->getRepository('P4BookingBundle:Schedule');
+        $this->repo = $repo;
+    }
+    public function isFree(\P4\BookingBundle\Entity\Books $book)
+    {
+        $date = $book->getDate();
+        $count = count($book->getTicket());
         
-        $scheduled = $repo->findBy($date);
-        if( $scheduled->getSchedule() + $count > 1000  )
+        $repo= $this->repo;
+        
+        $scheduled = $repo->findDate($date);
+        var_dump($scheduled);
+        
+        if( count($scheduled) + $count > 1000 || $scheduled = null )
         {
+            
             return true;
         }
         else
         {
+            $repo->update($scheduled, $count, $date);
             return false;
         }
     }

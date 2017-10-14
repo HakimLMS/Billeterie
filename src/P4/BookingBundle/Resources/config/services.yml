@@ -2,3 +2,6 @@ services:
 #    p4_booking.example:
 #        class: P4\BookingBundle\Example
 #        arguments: ["@service_id", "plain_value", "%parameter%"]
+    p4_booking.CheckSchedule:
+        class: P4\BookingBundle\CheckSchedule\CheckSchedule
+        arguments: ["@=service('doctrine.orm.entity_manager').getRepository('P4BookingBundle:Schedule')"]

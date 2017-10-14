@@ -47,14 +47,16 @@ class BooksController extends Controller
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid())
         {
             //utilisation service checkschedule
-            $checkschedule = $this->container->get('CheckSchedule');
-            $date = $book->getDate();
-            $scheduled = $em->getRepository('P4BookingBundle:Schedule')->findBy($date);   
-            $count =  $scheduled->getCount();
+            $checkschedule = $this->container->get('p4_booking.CheckSchedule');
+            
                     
-            if ($checkschedule->isFree($date, $count) != true )
+            if ($checkschedule->isFree($book) != true )
             {
                 //variables session plus message flashbag donnat le nombre de places restantes pour la date prévue
+            }
+            else
+            {
+                
             }
             
             
