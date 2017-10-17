@@ -22,10 +22,10 @@ class CheckSchedule
         $scheduled = $repo->findDate($date);
         var_dump($scheduled);
         
-        if( count($scheduled) + $count > 1000 || $scheduled = null )
+        if( count($scheduled) + $count > 1000)
         {
             
-            return true;
+            return array('true'=>true, 'available' => (1000 + count($scheduled) - $count));
         }
         else
         {

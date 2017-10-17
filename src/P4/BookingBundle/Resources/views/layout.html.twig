@@ -11,7 +11,20 @@
         </header>
         
         <main>
-            <div><p>Hello World<p/></div>
+
+    {% for message in app.flashes('fullbookeddate') %}
+        <div class="flash-notice">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('succesfullbookdate') %}
+        <div class="flash-notice">
+            {{ message }}
+        </div>
+    {% endfor %}
+            
+
+            
             {% block form %}
             {% endblock %}
         </main>

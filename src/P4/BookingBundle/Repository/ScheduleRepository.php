@@ -1,6 +1,5 @@
 <?php
-use Doctrine\ORM\EntityManager;
-use P4\BookingBundle\Entity\Schedule;
+
 
 
 namespace P4\BookingBundle\Repository;
@@ -16,13 +15,13 @@ class ScheduleRepository extends \Doctrine\ORM\EntityRepository
 {
     public function findDate($date)
     {
-        $qb = $this->createQueryBuilder('p')
+        $qb = $this->createQueryBuilder('p')//prendre première ligne
                 ->select('p')
                 ->where('p.date = :date')
                 ->setParameter(':date',$date);
         
         return $qb->getQuery()
-                ->getResult();
+                ->getOneOrNullResult();
     }
     
     public function update($scheduled, $count, $date)
@@ -31,7 +30,7 @@ class ScheduleRepository extends \Doctrine\ORM\EntityRepository
        
        if(is_null($scheduled))
        {
-           $schedule = new \P4\BookingBundle\Entity\Schedule();
+           $schedule = new \P4\BookingBundle\Entity\Schedule();  
            $schedule->setDate($date);
            $schedule->setCount($count);
            $em->persist($schedule);
@@ -41,7 +40,7 @@ class ScheduleRepository extends \Doctrine\ORM\EntityRepository
        {
         $oldcount = $scheduled->getCount();
         $scheduled->setCount($oldcount + $count);
-        $em->persist($scheduled);
+        $scheduled = $em->merge($scheduled);
         $em->flush();
        }
        

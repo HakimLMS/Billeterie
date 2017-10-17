@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use P4\BookingBundle\Form\Type\BooksType;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Book controller.
@@ -41,6 +42,8 @@ class BooksController extends Controller
      */
     public function newAction(Request $request)
     {
+
+        
         $book = new Books();
         $form = $this->get('form.factory')->create(BooksType::class,$book);
         $em = $this->getDoctrine()->getManager();
@@ -48,14 +51,20 @@ class BooksController extends Controller
         {
             //utilisation service checkschedule
             $checkschedule = $this->container->get('p4_booking.CheckSchedule');
+            $checked = $checkschedule->isFree($book);
             
+            $flash = $this->get('session')->getFlashBag();
                     
-            if ($checkschedule->isFree($book) != true )
+            if ($checked['true'] != true || $checked != true )
             {
-                //variables session plus message flashbag donnat le nombre de places restantes pour la date prévue
+               $flash->add('fullbookeddate', 'Le date que vous selectionné pour votre reservation n\'est plus disponible. Il reste seulement '.$checked['available'].'places disponibles');
+               $flash->get('fullbookeddate');
+               
             }
             else
             {
+                $flash->add('succesfullbookdate', 'Votre commande a bien été enregistrée');
+                $flash->get('succesfullbookdate');
                 
             }
             
