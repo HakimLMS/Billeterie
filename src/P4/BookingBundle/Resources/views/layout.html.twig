@@ -12,21 +12,18 @@
         
         <main>
 
-    {% for message in app.flashes('fullbookeddate') %}
-        <div class="flash-notice">
-            {{ message }}
-        </div>
-    {% endfor %}
-    {% for message in app.flashes('succesfullbookdate') %}
-        <div class="flash-notice">
-            {{ message }}
-        </div>
-    {% endfor %}
+    
+            {% for message in app.session.flashbag.get('successfullbookdate') %}
+                <div class="flash-notice">
+                    {{ message }}
+                </div>
+            {% endfor %}
             
 
             
             {% block form %}
             {% endblock %}
+        
         </main>
         
         <footer>

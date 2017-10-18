@@ -16,16 +16,23 @@ class CheckSchedule
     {
         $date = $book->getDate();
         $count = count($book->getTicket());
-        
+        $oldcount;
         $repo= $this->repo;
         
         $scheduled = $repo->findDate($date);
-        var_dump($scheduled);
-        
-        if( count($scheduled) + $count > 1000)
+        if ($scheduled != null)
         {
-            
-            return array('true'=>true, 'available' => (1000 + count($scheduled) - $count));
+            $oldcount = $scheduled->getCount();   
+        }
+        else
+        {
+            $oldcount = 0;
+        }
+        
+        
+        if( $oldcount + $count > 1000)
+        { 
+            return true;
         }
         else
         {

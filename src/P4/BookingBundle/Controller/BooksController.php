@@ -29,7 +29,7 @@ class BooksController extends Controller
 
         $books = $em->getRepository('P4BookingBundle:Books')->findAll();
 
-        return $this->render('books/index.html.twig', array(
+        return $this->render('P4BookingBundle:Booking:index.html.twig', array(
             'books' => $books,
         ));
     }
@@ -51,44 +51,38 @@ class BooksController extends Controller
         {
             //utilisation service checkschedule
             $checkschedule = $this->container->get('p4_booking.CheckSchedule');
-            $checked = $checkschedule->isFree($book);
+            $checkschedule->isFree($book);
             
             $flash = $this->get('session')->getFlashBag();
-                    
-            if ($checked['true'] != true || $checked != true )
+            
+            if ( $checkschedule->isFree($book) )
             {
-               $flash->add('fullbookeddate', 'Le date que vous selectionné pour votre reservation n\'est plus disponible. Il reste seulement '.$checked['available'].'places disponibles');
-               $flash->get('fullbookeddate');
-               
+               $flash->add('fullbookeddate', 'Le date selectionnée pour votre reservation n\'est plus disponible.');
+               return $this->redirectToRoute('p4_booking_books');
             }
-            else
+            else 
             {
-                $flash->add('succesfullbookdate', 'Votre commande a bien été enregistrée');
-                $flash->get('succesfullbookdate');
+               // flush entité en one shot   
+                $formticket = clone $book->getTicket();    
+                $book->getTicket()->clear();
+
+                // 1/2 flush book
+                $em->persist($book);
+                $em->flush();
+
+                // 2/2 flush ticket
+                foreach( $formticket as $t)
+                {    
+                    $t->setBooks($book);
+                    $book->addTicket($t);
+                    $em->persist($t);
+                }
                 
-            }
-            
-            
-        $formticket = clone $book->getTicket();    
-        $book->getTicket()->clear();
-        
-        
-        $em->persist($book);
-        $em->flush();
-        
-        
-        foreach( $formticket as $t)
-            {    
-                $t->setBooks($book);
-                $book->addTicket($t);
-                $em->persist($t);
-            }
-        $em->flush();    
-        }
- 
-        
-        
-        
+               $em->flush();
+               $flash->add('successfullbookdate', 'Votre commande a bien été enregistrée');
+               return $this->redirectToRoute('p4_booking_homepage');
+            }           
+        }      
         return $this->render('P4BookingBundle:Booking:booking.html.twig', array('book' => $book, 'form' => $form->createView()));
     }
 
