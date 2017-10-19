@@ -21,6 +21,9 @@
       $container.children('div').each(function() {
         addDeleteLink($(this));
       });
+      
+    
+   
     }
 
     // La fonction qui ajoute un formulaire CategoryType
@@ -62,4 +65,15 @@
         return false;
       });
     }
+    
+    //set fr
+
+    $( ".js-datepicker" ).datepicker({
+       
+        format : 'yyyy-MM-dd'
+    });
+
+ 
+    
   });
+  

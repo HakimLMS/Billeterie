@@ -3,8 +3,6 @@
 namespace P4\BookingBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,8 +14,7 @@ class TicketsType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('type', TextType::class)
-                ->add('date', DateType::class)
+        $builder->add('type', ChoiceType::class, array("choices" => array("Journée"=> true, "Demi-journée" => false)))
                 ->add('discount', ChoiceType::class, array("choices" => 
                 array("Oui"=> true, "Non"=> false)));                
     }

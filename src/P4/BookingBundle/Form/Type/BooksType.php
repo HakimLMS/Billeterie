@@ -20,11 +20,21 @@ class BooksType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('date', DateType::class)
+        $builder->add('date', DateType::class, array(    
+                    'widget' => 'single_text',
+                    'html5' => false,
+                    'data_class' => 'DateTime',
+                    'format' => 'yyyy-MM-dd'
+                    ))
                 ->add('mail', EmailType::class)
                 ->add('name', TextType::class)
                 ->add('surname', TextType::class)
-                ->add('birth', DateType::class)
+                ->add('birth', DateType::class, array(    
+                    'widget' => 'single_text',
+                    'html5' => false,
+                    'data_class' => 'DateTime',
+                    'format' => 'yyyy-MM-dd'
+                    ))
                 ->add('country', CountryType::class)
                 ->add('ticket', CollectionType::class, array(
                     'entry_type' => TicketsType::class,

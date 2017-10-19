@@ -38,7 +38,7 @@ class BooksController extends Controller
      * Creates a new book entity.
      *
      * @Route("/book", name="books_new")
-     * @Method({"GET", "POST"})
+     * @Method({"POST"})
      */
     public function newAction(Request $request)
     {
@@ -46,19 +46,20 @@ class BooksController extends Controller
         
         $book = new Books();
         $form = $this->get('form.factory')->create(BooksType::class,$book);
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();       
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid())
         {
             //utilisation service checkschedule
             $checkschedule = $this->container->get('p4_booking.CheckSchedule');
-            $checkschedule->isFree($book);
+            $x = $checkschedule->isFree($book);
+            
             
             $flash = $this->get('session')->getFlashBag();
             
             if ( $checkschedule->isFree($book) )
             {
                $flash->add('fullbookeddate', 'Le date selectionnée pour votre reservation n\'est plus disponible.');
-               return $this->redirectToRoute('p4_booking_books');
+               
             }
             else 
             {
@@ -74,15 +75,18 @@ class BooksController extends Controller
                 foreach( $formticket as $t)
                 {    
                     $t->setBooks($book);
+                    $t->setDate($book->getDate());
                     $book->addTicket($t);
                     $em->persist($t);
+                    var_dump($t);
+                    var_dump($book);
                 }
                 
                $em->flush();
                $flash->add('successfullbookdate', 'Votre commande a bien été enregistrée');
                return $this->redirectToRoute('p4_booking_homepage');
             }           
-        }      
+        }
         return $this->render('P4BookingBundle:Booking:booking.html.twig', array('book' => $book, 'form' => $form->createView()));
     }
 
