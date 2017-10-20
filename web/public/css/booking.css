@@ -1,0 +1,94 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 20 oct. 2017, 11:50:59
+    Author     : hloua
+*/
+.title
+{
+    text-align: center;
+    margin-bottom: 30px;
+}
+.navbar
+{
+    background-color: #C0C0C0;
+    border-bottom: solid;
+    border-color: rgba(0,0,0,.15);
+    border-width: 1px;
+}
+
+.nav-link
+{
+    font-size: 1.5em !important;
+}
+.navbar-nav mr-auto
+{
+    padding-left: 35px !important;
+}
+main
+{
+    padding-top: 50px;
+}
+.tickets
+{
+    padding-left : 75px; 
+}
+form{
+    border: solid;
+    border-radius: 30px;
+    border-color: #C0C0C0;
+    border-width: 0.5px;
+
+    padding-top: 35px;
+
+}
+
+#p4_bookingbundle_books_ticket div
+{
+    margin: 10px;
+}
+
+.list-group
+{
+    width: 90%;
+}
+.form-group input
+{
+    width: 100%;
+    border-radius: 5px;
+    text-align: center; 
+}
+.well
+{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.mr-auto{
+    text-align: right;
+    padding-right: 40px;
+}
+.datepicker-days
+{
+    width: 100%;
+    padding: 20px;
+    font-size: 1.5em;
+}
+.footer{
+    margin-top: 100px;
+    border-color: rgba(0,0,0,.15);
+    border-top: solid;
+    list-style: none;
+    padding-top: 20px;
+    background-color: #C0C0C0;
+     border-width: 1px;
+    position: absolute;
+    width: 100%;
+}
+
+.footer a{
+    color: black;
+}
+

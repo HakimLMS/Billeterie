@@ -1,0 +1,31 @@
+
+{% block head %}
+
+<nav class="navbar navbar-toggleable-md navbar-light bg-light" >
+    <div class="row">
+        <div class="col-md-10">
+        <a class="navbar-brand" href="{{ path('p4_booking_homepage')}}"><img src="../public/img/louvre.png"></a>
+        </div>
+        
+        <div class="col-md-2" style="padding-top:25px; padding-left: 25px;">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        </div>
+    </div>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active p-3">
+        <a class="nav-link" href="{{ path('p4_booking_homepage')}}">Accueil<span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item active p-3">
+        <a class="nav-link" href="{{ path('p4_booking_books')}}">Reservation</a>
+      </li> 
+    </ul>
+
+  </div>
+</nav>
+
+    
+{% endblock %}

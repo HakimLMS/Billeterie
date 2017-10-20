@@ -1,6 +1,9 @@
 {% extends 'P4BookingBundle::layout.html.twig' %}
-{% block head %}
-    
+{% block head %}   
+{% endblock %}
+
+{% block title %}
+    <h3 class='title'>Reservez vos Billets</h3>
 {% endblock %}
 
 {% block main %}
@@ -11,8 +14,9 @@
     {% endfor %}
 
     {% block form %}
-    <div class="container">
-            <div class="well">
+        <div class="container">
+        <form>
+            <div class="well" align="center">
                {{ form_start(form)}}
 
                <div class="form-group">
@@ -46,20 +50,27 @@
                {{ form_widget(form.country, {'attr': {'class': 'foo'}}) }}
                </div>
 
-
-               <div class="form-group">
-                    {{form(form.ticket)}}
-                    <a href="#" id="add_ticket" class="btn btn-default">Ajouter un Ticket</a><br>
-                     {{ form_widget(form.valider, {'attr': {'class': 'btn btn-primary'}}) }}
-                     {{ form_rest(form) }}
-                     {{ form_end(form) }}
+               <div class="tickets" align="left">
+                    <div class="form-group">
+                        <div class="row" style="margin-bottom: 30px; margin-top: 30px;">
+                           <ul class="list-group"> 
+                               <li class="list-group-item"><div class="col-md-12">{{form(form.ticket)}}</div></li>
+                               <a href="#" id="add_ticket" class="btn btn-default"><button type="button" class="btn btn-outline-primary">Ajouter un Ticket</button></a>
+                           </ul>
+                           
+                           
+                        </div>
+                          {{ form_widget(form.valider, {'attr': {'class': 'btn btn-primary'}}) }}
+                          {{ form_rest(form) }}
+                          {{ form_end(form) }}
+                    </div>
                </div>
 
                {{ form_rest(form) }}
             {{ form_end(form) }}
             </div>
-            
-    </div>
+        </form>
+        </div>
     {% endblock %}
 {% endblock %}
 {% block script %}
