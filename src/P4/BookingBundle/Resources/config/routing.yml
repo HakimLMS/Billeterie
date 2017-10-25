@@ -5,3 +5,11 @@ p4_booking_homepage:
 p4_booking_books:
     path:     /book
     defaults: {_controller: P4BookingBundle:Books:new }
+
+p4_booking_payements:
+    path: /pay
+    defaults: {_controller: P4BookingBundle:Books:pay }
+    
+p4_booking_charge:
+    path: /charge
+    defaults: {_controller : P4Bookingbundle:Books:charge }

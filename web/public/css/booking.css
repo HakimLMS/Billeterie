@@ -91,4 +91,30 @@ form{
 .footer a{
     color: black;
 }
+.jumbotron-flat{
+    
+background-color: #4DB8FFF;
+height: 100%;
+border: 1px solid #4DB8FF;
+background: white;
+width: 100%;
+text-align: center;
+overflow: auto;
+}
 
+.paymentAmt {
+    font-size: 80px; 
+}
+
+.centered {
+    text-align: center;
+}
+
+.title {
+ padding-top: 15px;   
+}
+input {
+    border: solid;
+    border-color: #C0C0C0;
+    border-radius: 4px;
+}

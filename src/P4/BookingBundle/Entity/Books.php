@@ -51,13 +51,6 @@ class Books
     private $surname;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="birth", type="date")
-     */
-    private $birth;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="country", type="string", length=255)
@@ -69,6 +62,13 @@ class Books
      * @ORM\OneToMany(targetEntity="P4\BookingBundle\Entity\Tickets", mappedBy="books", cascade={"persist"})
      */
     private $tickets;
+    
+    /**
+     * @var int
+     * 
+     * @ORM\Column(name="amount", type="integer")
+     */
+    private $amount;
 
 
     /**
@@ -178,30 +178,6 @@ class Books
     }
 
     /**
-     * Set birth
-     *
-     * @param \DateTime $birth
-     *
-     * @return Books
-     */
-    public function setBirth($birth)
-    {
-        $this->birth = $birth;
-
-        return $this;
-    }
-
-    /**
-     * Get birth
-     *
-     * @return \DateTime
-     */
-    public function getBirth()
-    {
-        return $this->birth;
-    }
-
-    /**
      * Set country
      *
      * @param string $country
@@ -262,6 +238,40 @@ class Books
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getTicket()
+    {
+        return $this->tickets;
+    }
+
+    /**
+     * Set amount
+     *
+     * @param integer $amount
+     *
+     * @return Books
+     */
+    public function setAmount($amount)
+    {
+        $this->amount = $amount;
+
+        return $this;
+    }
+
+    /**
+     * Get amount
+     *
+     * @return integer
+     */
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+
+    /**
+     * Get tickets
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTickets()
     {
         return $this->tickets;
     }

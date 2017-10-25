@@ -3,6 +3,7 @@
 namespace P4\BookingBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use P4\BookingBundle\Entity\Books;
 
 /**
  * Tickets
@@ -31,9 +32,9 @@ class Tickets
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date", type="date")
+     * @ORM\Column(name="dateDate", type="date")
      */
-    private $date;
+    private $birthDate;
 
     /**
      * @var bool
@@ -43,12 +44,39 @@ class Tickets
     private $discount;
     
     /**
-     * @ORM\ManyToOne(targetEntity="P4\BookingBundle\Books", inversedBy="tickets")
+     * @ORM\ManyToOne(targetEntity="P4\BookingBundle\Entity\Books", inversedBy="tickets", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
-    private $book;
+    private $books;
+    
+    /**
+     * @var \DateTime
+     * 
+     *@ORM\Column(name="dateBook",type="date")
+     */
+    private $date;
+    
+    /**
+     *
+     * @var type int
+     */
+    private $book_id;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255)
+     */
+    private $name;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="surname", type="string", length=255)
+     */
+    private $surname;
 
-
+    
     /**
      * Get id
      *
@@ -84,27 +112,27 @@ class Tickets
     }
 
     /**
-     * Set date
+     * Set birthdate
      *
      * @param \DateTime $date
      *
      * @return Tickets
      */
-    public function setDate($date)
+    public function setBirthDate($date)
     {
-        $this->date = $date;
+        $this->birthDate = $date;
 
         return $this;
     }
 
     /**
-     * Get date
+     * Get birthdate
      *
      * @return \DateTime
      */
-    public function getDate()
+    public function getBirthDate()
     {
-        return $this->date;
+        return $this->birthDate;
     }
 
     /**
@@ -130,5 +158,76 @@ class Tickets
     {
         return $this->discount;
     }
-}
 
+    /**
+     * Set book
+     *
+     * @param \P4\BookingBundle\Books $book
+     *
+     * @return Tickets
+     */
+    public function setBooks(Books $book)
+    {
+        $this->books = $book;
+
+        return $this;
+    }
+
+    /**
+     * Get book
+     *
+     * @return \P4\BookingBundle\Books
+     */
+    public function getBooks()
+    {
+        return $this->books;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return Tickets
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set surname
+     *
+     * @param string $surname
+     *
+     * @return Tickets
+     */
+    public function setSurname($surname)
+    {
+        $this->surname = $surname;
+
+        return $this;
+    }
+
+    /**
+     * Get surname
+     *
+     * @return string
+     */
+    public function getSurname()
+    {
+        return $this->surname;
+    }
+}

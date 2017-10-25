@@ -32,9 +32,9 @@ class Tickets
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date", type="date")
+     * @ORM\Column(name="dateBirth", type="date")
      */
-    private $date;
+    private $birthDate;
 
     /**
      * @var bool
@@ -50,10 +50,31 @@ class Tickets
     private $books;
     
     /**
+     * @var \DateTime
+     * 
+     *@ORM\Column(name="dateBook",type="date")
+     */
+    private $date;
+    
+    /**
      *
      * @var type int
      */
     private $book_id;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255)
+     */
+    private $name;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="surname", type="string", length=255)
+     */
+    private $surname;
 
     
     /**
@@ -91,27 +112,27 @@ class Tickets
     }
 
     /**
-     * Set date
+     * Set birthdate
      *
      * @param \DateTime $date
      *
      * @return Tickets
      */
-    public function setDate($date)
+    public function setBirthDate($date)
     {
-        $this->date = $date;
+        $this->birthDate = $date;
 
         return $this;
     }
 
     /**
-     * Get date
+     * Get birthdate
      *
      * @return \DateTime
      */
-    public function getDate()
+    public function getBirthDate()
     {
-        return $this->date;
+        return $this->birthDate;
     }
 
     /**
@@ -160,5 +181,77 @@ class Tickets
     public function getBooks()
     {
         return $this->books;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return Tickets
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set surname
+     *
+     * @param string $surname
+     *
+     * @return Tickets
+     */
+    public function setSurname($surname)
+    {
+        $this->surname = $surname;
+
+        return $this;
+    }
+
+    /**
+     * Get surname
+     *
+     * @return string
+     */
+    public function getSurname()
+    {
+        return $this->surname;
+    }
+
+    /**
+     * Set date
+     *
+     * @param \DateTime $date
+     *
+     * @return Tickets
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * Get date
+     *
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
     }
 }

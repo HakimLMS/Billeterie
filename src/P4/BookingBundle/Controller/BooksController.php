@@ -3,6 +3,8 @@
 namespace P4\BookingBundle\Controller;
 
 use P4\BookingBundle\Entity\Books;
+use P4\BookingBundle\Entity\Price;
+use P4\BookingBundle\Entity\Tickets;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -41,12 +43,14 @@ class BooksController extends Controller
      * @Method({"POST"})
      */
     public function newAction(Request $request)
-    {
-
-        
+    {        
         $book = new Books();
         $form = $this->get('form.factory')->create(BooksType::class,$book);
-        $em = $this->getDoctrine()->getManager();       
+        $em = $this->getDoctrine()->getManager();
+        
+        //price fixing
+        
+        // form handle
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid())
         {
             //utilisation service checkschedule
@@ -63,7 +67,12 @@ class BooksController extends Controller
             }
             else 
             {
-               // flush entité en one shot   
+               // flush entité en one shot
+                
+                $totalAmount = $this->amountType($book);
+                $book->setAmount(array_sum($totalAmount));
+                var_dump($totalAmount);
+                die();
                 $formticket = clone $book->getTicket();    
                 $book->getTicket()->clear();
 
@@ -78,8 +87,6 @@ class BooksController extends Controller
                     $t->setDate($book->getDate());
                     $book->addTicket($t);
                     $em->persist($t);
-                    var_dump($t);
-                    var_dump($book);
                 }
                 
                $em->flush();
@@ -166,4 +173,94 @@ class BooksController extends Controller
             ->getForm()
         ;
     }
+    
+    public function payAction()
+    {
+        
+        
+        return $this->render('P4BookingBundle:Booking:stripepayements.html.twig');
+    }
+    
+    public function chargeAction()
+    {
+        \Stripe\Stripe::setApiKey("sk_test_W6WXT55oRpahbFejPnk2NWMl");
+        
+        $token = $_POST['stripeToken'];
+        
+            // Charge the user's card:
+    $charge = \Stripe\Charge::create(array(
+      "amount" => 1000,
+      "currency" => "eur",
+      "description" => "Example charge",
+      "source" => $token,
+    ));
+    }
+    
+    //set books amount.
+    private function amountType(Books $book)
+    {
+        
+        //Set variables
+       $tickets= $book->getTicket();
+       $price = new Price();       
+       $today = new \DateTime('today');
+       $em = $this->getDoctrine()->getManager();
+       
+       $totalAmount= 0;
+       
+       if($tickets != null)
+       {
+           
+           //définit le lien entre type du ticekt et le type de tarrificiation. 
+          foreach($tickets as $ticket)
+          {
+              
+          
+              $birthdate = $ticket->getBirthDate();
+              $Interval = $today->diff($birthdate);
+              $yyInterval = $Interval->format('Y');
+              $amount;
+              $totalAmount = 0;
+              var_dump($yyInterval);
+       
+              
+              if($ticket->getDiscount() == true)
+              {   
+                  $type = 'true';
+                  $amount = $em->getRepository('P4BookingBundle:Price')->findPrice($type);var_dump($amount);
+                  $totalAmount = $repo->findPrice($type);
+              }
+              else
+              {
+                  switch(true){
+                      
+                      case $yyInterval <4:
+                          $type ="4";
+                          $totalAmount = $repo->findPrice($type);
+                          
+                          break;
+                      
+                      case $yyInterval<12:
+                          $type ="12";
+                         $totalAmount = $repo->findPrice($type);
+                          break;
+                      
+                      case $yyInterval<60:
+                          $type ="60";
+ $totalAmount = $repo->findPrice($type);
+                          break;
+                      
+                      case $yyInterval>=60:
+                          $type ="+60";
+$totalAmount = $repo->findPrice($type);
+                          break;  
+                  }
+              }
+  
+          }
+        }
+        
+        return $totalAmount;
+    }
+    
 }
