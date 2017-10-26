@@ -18,7 +18,9 @@ class PriceRepository extends \Doctrine\ORM\EntityRepository
                 ->where('p.type = :type')
                 ->setParameter(':type',$type);
         
-        return $qb->getQuery()
-                ->getResult();
+        $result = $qb->getQuery()
+                ->getSingleResult();
+        
+        return $result['amount'];
     }
 }

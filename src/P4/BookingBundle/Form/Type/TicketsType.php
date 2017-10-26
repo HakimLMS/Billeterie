@@ -16,18 +16,27 @@ class TicketsType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('type', ChoiceType::class, array("choices" => array("Journée"=> true, "Demi-journée" => false)))
-                ->add('name', TextType::class)
-                ->add('surname', TextType::class)
+        $builder->add('type', ChoiceType::class, array(
+                    "choices" => array("Journée"=> true, "Demi-journée" => false),
+                    "label" => 'Type de visite'
+                ))
+                ->add('name', TextType::class, array (
+                    'label' => 'Nom'
+                ))
+                ->add('surname', TextType::class, array(
+                    'label' => 'Prénom'
+                ))
                 ->add('birthDate', DateType::class, array(    
                     'widget' => 'single_text',
                     'html5' => false,
                     'data_class' => 'DateTime',
                     'format' => 'yyyy-MM-dd',
-                    'attr' => array('class' => 'js-datepicker')
+                    'attr' => array('class' => 'js-datepicker'),
+                    'label' => 'Date de Naissance'
                     ))
-                ->add('discount', ChoiceType::class, array("choices" => 
-                array("Oui"=> true, "Non"=> false)));                
+                ->add('discount', ChoiceType::class, array(
+                    "choices" => array("Oui"=> true, "Non"=> false),
+                    'label' => 'Réduction'));                
     }
     
     /**

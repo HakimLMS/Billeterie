@@ -67,11 +67,9 @@ class BooksController extends Controller
             }
             else 
             {
-               // flush entité en one shot
+                $this->amountType($book);
                 
-                $totalAmount = $this->amountType($book);
-                $book->setAmount(array_sum($totalAmount));
-                var_dump($totalAmount);
+                var_dump($book->getAmount());
                 die();
                 $formticket = clone $book->getTicket();    
                 $book->getTicket()->clear();
@@ -215,52 +213,54 @@ class BooksController extends Controller
           foreach($tickets as $ticket)
           {
               
-          
+              $repo = $em->getRepository('P4BookingBundle:Price');
+              
+              //fixe l'interval de temps qui définit le prix du billet
               $birthdate = $ticket->getBirthDate();
               $Interval = $today->diff($birthdate);
-              $yyInterval = $Interval->format('Y');
-              $amount;
-              $totalAmount = 0;
-              var_dump($yyInterval);
-       
+              $Interval = $Interval->format('%Y');
               
-              if($ticket->getDiscount() == true)
+              //créé la variable amount de la commande. (entité book)
+              $amount = $book->getAmount();
+       
+              if($Interval <4)
+              {
+                $type ="4";
+                $ticketprice = $repo->findPrice($type);
+                $book->setAmount($amount + $ticketprice);    
+              }
+              elseif($ticket->getDiscount() == true)
               {   
                   $type = 'true';
-                  $amount = $em->getRepository('P4BookingBundle:Price')->findPrice($type);var_dump($amount);
-                  $totalAmount = $repo->findPrice($type);
+                  $ticketprice = $repo->findPrice($type);
+                  $book->setAmount($amount + $ticketprice);
+                 
               }
               else
               {
                   switch(true){
-                      
-                      case $yyInterval <4:
-                          $type ="4";
-                          $totalAmount = $repo->findPrice($type);
-                          
-                          break;
-                      
-                      case $yyInterval<12:
+                      case $Interval<12:
                           $type ="12";
-                         $totalAmount = $repo->findPrice($type);
+                          $ticketprice = $repo->findPrice($type);
+                          $book->setAmount($amount + $ticketprice);
                           break;
                       
-                      case $yyInterval<60:
+                      case $Interval<60:
                           $type ="60";
- $totalAmount = $repo->findPrice($type);
+                          $ticketprice = $repo->findPrice($type);
+                          $book->setAmount($amount + $ticketprice);
                           break;
                       
-                      case $yyInterval>=60:
+                      case $Interval>=60:
                           $type ="+60";
-$totalAmount = $repo->findPrice($type);
-                          break;  
+                          $ticketprice = $repo->findPrice($type);
+                          $book->setAmount($amount + $ticketprice);
+                          break;
                   }
               }
   
           }
         }
-        
-        return $totalAmount;
     }
     
 }
