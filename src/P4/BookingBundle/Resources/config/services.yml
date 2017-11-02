@@ -5,3 +5,7 @@ services:
     p4_booking.CheckSchedule:
         class: P4\BookingBundle\CheckSchedule\CheckSchedule
         arguments: ["@=service('doctrine.orm.entity_manager').getRepository('P4BookingBundle:Schedule')"]
+        
+    p4_booking.CheckPrice:
+        class: P4\BookingBundle\CheckPrice\CheckPrice
+        arguments: ["@=service('doctrine.orm.entity_manager').getRepository('P4BookingBundle:Price')"]

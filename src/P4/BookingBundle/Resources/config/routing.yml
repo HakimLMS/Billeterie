@@ -12,4 +12,8 @@ p4_booking_payements:
     
 p4_booking_charge:
     path: /charge
-    defaults: {_controller : P4Bookingbundle:Books:charge }
+    defaults: {_controller : P4BookingBundle:Books:charge }
+
+p4_booking_validation:
+    path: /validation
+    defaults: {_controller : P4BookingBundle:Books:validation }

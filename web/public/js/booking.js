@@ -3,16 +3,28 @@
     var $container = $('div#p4_bookingbundle_books_ticket');
 
     // On définit un compteur unique pour nommer les champs qu'on va ajouter dynamiquement
-    var index = $container.find(':input').length;
+    var index = $container.find(':input').length;  
+    
 
     // On ajoute un nouveau champ à chaque clic sur le lien d'ajout.
     $('#add_ticket').click(function(e) {
       addCategory($container);
-    $( ".js-datepicker" ).datepicker({
-language: 'fr'
-        });
+      
+    $( ".datepicker" ).datepicker({
+			showOn: "focus",
+			buttonImage: "images/general/calendar.gif",
+			buttonImageOnly: false,
+			changeMonth: true,
+			changeYear: true,
+			showWeek: true,
+   			beforeShowDay: '',
+			showAnim: "show"
+		});
+
+
       e.preventDefault(); // évite qu'un # apparaisse dans l'URL
       return false;
+      
     });
 
     // On ajoute un premier champ automatiquement s'il n'en existe pas déjà un (cas d'une nouvelle annonce par exemple).
@@ -68,24 +80,16 @@ language: 'fr'
       });
     }
     
-    //set fr
-
-   $( ".js-datepicker" ).datepicker({
-       language: 'fr'
-   }); 
-
-    $.fn.datepicker.dates['fr'] = {
-            days:["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"],
-            daysShort:["dim.","lun.","mar.","mer.","jeu.","ven.","sam."],
-            daysMin:["d","l","ma","me","j","v","s"],
-            months:["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"],
-            monthsShort:["janv.","févr.","mars","avril","mai","juin","juil.","août","sept.","oct.","nov.","déc."],
-            today:"Aujourd'hui",
-            monthsTitle:"Mois",
-            clear:"Effacer",
-            weekStart:1,
-            format:"dd/mm/yyyy"  
-    };
-    
+    $( ".datepicker" ).datepicker({
+			showOn: "focus",
+			buttonImage: "images/general/calendar.gif",
+			buttonImageOnly: false,
+			changeMonth: true,
+			changeYear: true,
+			showWeek: true,
+   			beforeShowDay: '',
+			showAnim: "show"
+		});
+                
   });
   

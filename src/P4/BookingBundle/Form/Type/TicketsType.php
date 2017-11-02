@@ -18,6 +18,7 @@ class TicketsType extends AbstractType
     {
         $builder->add('type', ChoiceType::class, array(
                     "choices" => array("Journée"=> true, "Demi-journée" => false),
+                    'attr' => array('class' => 'typePick'),
                     "label" => 'Type de visite'
                 ))
                 ->add('name', TextType::class, array (
@@ -30,12 +31,12 @@ class TicketsType extends AbstractType
                     'widget' => 'single_text',
                     'html5' => false,
                     'data_class' => 'DateTime',
-                    'format' => 'yyyy-MM-dd',
-                    'attr' => array('class' => 'js-datepicker'),
+                    'format' => 'dd/mm/yyyy',
+                    'attr' => array('class' => 'datepicker'),
                     'label' => 'Date de Naissance'
                     ))
                 ->add('discount', ChoiceType::class, array(
-                    "choices" => array("Oui"=> true, "Non"=> false),
+                    "choices" => array("Non"=> false, "Oui"=> true),
                     'label' => 'Réduction'));                
     }
     

@@ -1,7 +1,4 @@
 <?php
-
-use Doctrine\ORM\EntityManager;
-
 namespace P4\BookingBundle\CheckSchedule;
 
 class CheckSchedule
@@ -15,12 +12,15 @@ class CheckSchedule
     public function isFree(\P4\BookingBundle\Entity\Books $book)
     {
         $date = $book->getDate();
+        var_dump($date);
         $count = count($book->getTicket());
         $oldcount;
         $repo= $this->repo;
         
         $scheduled = $repo->findDate($date);
-        if ($scheduled != null)
+        var_dump($scheduled);
+        
+        if ($scheduled)
         {
             $oldcount = $scheduled->getCount();   
         }

@@ -6,24 +6,26 @@
             <div id="pay-invoice" class="card">
 
                    
-                <form action="/charge" method="post" novalidate="novalidate" id="payment-form">
+                <form action="{{path('p4_booking_charge')}}" method="post" novalidate="novalidate" id="payment-form">
                    
                         <div class="form-group">
                             <label for="cc-payment" class="control-label mb-1">Montant à régler</label>
-                            <input id="cc-pament" name="cc-payment" type="text" class="form-control" aria-required="true" aria-invalid="false" value="100.00">
+                            <input id="cc-payment" name="cc-payment" type="text" class="form-control" aria-required="true" aria-invalid="false" value="{{book.amount}}" readonly="readonly">
                         </div>
                         <div class="form-group ">
                             <label for="cc-name" class="control-label mb-1">Nom sur carte bancaire</label>
                             <input id="cc-name" name="cc-name" type="text" class="form-control cc-name valid" data-val="true" data-val-required="Insérez le nom présent sur la carte bancaire" autocomplete="cc-name" aria-required="true" aria-invalid="false" aria-describedby="cc-name-error">                           
                         </div>
-                    <div class="jumbotron">
-                        <p> Numéro, Cryptogramme et Code Postal</p><br>
-                        <div id="card-element">
+                        <div class="form-row">
+                            <div class="jumbotron">
+                                <p> Numéro, Cryptogramme et Code Postal</p><br>
+                                <div id="card-element">
+                                </div>
+                                <div id="card-errors" role="alert">
+                                </div>                   
+                            </div>
                         </div>
-                        <div id="card-errors" role="alert">
-                        </div>
-                    </div>
-
+                        <input type="hidden" name="b-id" value="{{ book.id }}" />
                         <div>
                             <button id="payment-button" type="submit" class="btn btn-lg btn-info btn-block">                               
                                 Régler la commande 
@@ -37,6 +39,7 @@
 </div>
 {% endblock %}
 {% block script %}
+    
     <script>
         var stripe = Stripe('pk_test_jB5pcMqX4X8dHbt901nkONog');
         var elements = stripe.elements();
@@ -46,7 +49,7 @@
           base: {
             // Add your base input styles here. For example:
             fontSize: '16px',
-            lineHeight: '24px',
+            lineHeight: '24px'
             
           }
         };

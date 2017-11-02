@@ -1,0 +1,66 @@
+{# empty Twig template #}
+{% block subject %}
+    Votre réservation pour la visite du musée du Louvre le {{book.date|date('d-m-Y')}} a été validée.
+{% endblock %}
+
+{% block body_html %}
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+  <div style="background-color: #C0C0C0;"><a href="http://www.louvre.fr/"><img src="../public/img/louvre.png" alt="header"></a></div>
+    {% block main %}
+        
+        <div class="container">
+            
+            <br><div>
+                <p style="text-align: justify">Bonjour,<br><br>
+                    Nous avons le plaisir de vous confirmer la validation de votre réservation pour l'entrée du musée Louvre.
+                    Nous vous prions de retrouver ci-dessous le récapilatif de celle-ci.<br><br>
+                    <strong>Attention :</strong> Cet Email fera office de billet d'entrée. Ainsi il sera à présenter à l'entrée du musée. 
+            </div>
+            
+            
+            <h4> Votre Reservation </h4>
+            
+            <p>Nom : {{ book.name|capitalize }}<br>
+            Prénom : {{book.surname|capitalize }}<br>
+            Date de visite : {{ book.date|date('d-m-Y') }}</p>
+            
+            <div class="row">
+                
+                <div class="col-md-2">
+                </div>
+                
+                <div class="col-md-10">    
+                    <h6> Vos billets :</h6>
+                    {% for ticket in book.tickets %}
+                        <div class="card">    
+                        <div class="card-block">
+                            Nom : {{ ticket.name|capitalize }}<br>
+                            Prénom  : {{ ticket.surname|capitalize }}<br>
+                            Date de Naissance : {{ ticket.birthDate|date('d-m-Y') }}
+                            {% if  ticket.discount == 1  %}
+                                <br>
+                                Tarfi réduit : Oui*                             
+                            {%endif%}
+                        </div></div>
+                    {% endfor %}    
+                        </div><br>   
+                    <br>
+                <p style="text-align: right;">
+                    <strong>Coût total TTC :</strong> {{book.amount}}€
+                </p>
+                
+                </div>
+        <p style="font-weight: 0.5em;">* En cas de tarif réduit, il sera nécessaire de présenter le justificatif de la réduction lors de la présentation des billets.
+            </div>
+        
+
+    {% endblock %}
+    {% block script %}
+    
+        <script src="https://js.stripe.com/v3/"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    {% endblock %}
+
+{% endblock %}

@@ -1,5 +1,6 @@
 {% extends 'P4BookingBundle::layout.html.twig' %}
-{% block head %}   
+{% block head %}
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 {% endblock %}
 
 {% block title %}
@@ -21,7 +22,7 @@
 
                <div class="form-group">
                {{ form_label(form.date, 'Date de réservation', {'label_attr': {'class': 'foo'}}) }}
-               {{ form_widget(form.date, {'attr': {'class': 'js-datepicker'}}) }}
+               {{ form_widget(form.date, {'attr': {'class': 'datepicker-book'}}) }}
                </div>
 
 
@@ -69,6 +70,9 @@
     {% endblock %}
 {% endblock %}
 {% block script %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.9.2/i18n/jquery.ui.datepicker-fr.min.js'></script>
     <script src='../public/js/booking.js'></script>
+    <script src='../public/js/datepicker.js'></script>
+    
+    
 {% endblock %}

@@ -3,15 +3,13 @@
 namespace P4\BookingBundle\Controller;
 
 use P4\BookingBundle\Entity\Books;
-use P4\BookingBundle\Entity\Price;
-use P4\BookingBundle\Entity\Tickets;
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use P4\BookingBundle\Form\Type\BooksType;
-use Symfony\Component\HttpFoundation\Session\Session;
-
+use Stripe;
 /**
  * Book controller.
  *
@@ -57,21 +55,22 @@ class BooksController extends Controller
             $checkschedule = $this->container->get('p4_booking.CheckSchedule');
             $x = $checkschedule->isFree($book);
             
+            //utilisation service checktype
+            $checktype = $this->container->get('p4_booking.CheckPrice');
+           
+            
             
             $flash = $this->get('session')->getFlashBag();
             
-            if ( $checkschedule->isFree($book) )
+            if ( $x === true )
             {
-               $flash->add('fullbookeddate', 'Le date selectionnée pour votre reservation n\'est plus disponible.');
-               
-            }
-            else 
-            {
-                $this->amountType($book);
                 
-                var_dump($book->getAmount());
-                die();
-                $formticket = clone $book->getTicket();    
+               $flash->add('fullbookeddate', 'Le date selectionnée pour votre reservation n\'est plus disponible.');
+               return $this->redirectToRoute('p4_booking_books');
+            }
+
+                $checktype->amountType($book);
+                $formticket = clone $book->getTicket(); 
                 $book->getTicket()->clear();
 
                 // 1/2 flush book
@@ -89,8 +88,10 @@ class BooksController extends Controller
                 
                $em->flush();
                $flash->add('successfullbookdate', 'Votre commande a bien été enregistrée');
-               return $this->redirectToRoute('p4_booking_homepage');
-            }           
+               
+               $id = $book->getId();
+               
+               return $this->redirectToRoute('p4_booking_payements', array('id' => $id));          
         }
         return $this->render('P4BookingBundle:Booking:booking.html.twig', array('book' => $book, 'form' => $form->createView()));
     }
@@ -172,95 +173,76 @@ class BooksController extends Controller
         ;
     }
     
-    public function payAction()
+    public function payAction(Request $request)
     {
+        $id = $_GET['id'];
         
+        $repo = $this
+                ->getDoctrine()
+                ->getManager()
+                ->getRepository('P4BookingBundle:Books');
         
-        return $this->render('P4BookingBundle:Booking:stripepayements.html.twig');
+        $book = $repo->find($id);
+        
+        return $this->render('P4BookingBundle:Booking:stripepayements.html.twig', array('book' => $book));
     }
     
-    public function chargeAction()
+    public function chargeAction(Request $request)
     {
-        \Stripe\Stripe::setApiKey("sk_test_W6WXT55oRpahbFejPnk2NWMl");
+        // s'appuyer sur $book->getAmount().
+        Stripe\Stripe::setApiKey("sk_test_W6WXT55oRpahbFejPnk2NWMl");
         
         $token = $_POST['stripeToken'];
+        $id = $_POST['b-id'];
         
-            // Charge the user's card:
-    $charge = \Stripe\Charge::create(array(
-      "amount" => 1000,
-      "currency" => "eur",
-      "description" => "Example charge",
-      "source" => $token,
-    ));
+        $repo = $this
+                ->getDoctrine()
+                ->getManager()
+                ->getRepository('P4BookingBundle:Books');
+        
+        $book = $repo->find($id);
+        
+        // Charge the user's card:
+        $charge = Stripe\Charge::create(array(
+        "amount" => $book->getAmount() * 100,
+        "currency" => "eur",
+        "description" => "Ticket Charge",
+        "source" => $token,
+        ));
+      
+      
+    
+    return $this->redirectToRoute('p4_booking_validation', array('id' => $id));
     }
     
-    //set books amount.
-    private function amountType(Books $book)
+    public function validationAction(Request $request)
     {
+        $id = $_GET['id'];
         
-        //Set variables
-       $tickets= $book->getTicket();
-       $price = new Price();       
-       $today = new \DateTime('today');
-       $em = $this->getDoctrine()->getManager();
-       
-       $totalAmount= 0;
-       
-       if($tickets != null)
-       {
-           
-           //définit le lien entre type du ticekt et le type de tarrificiation. 
-          foreach($tickets as $ticket)
-          {
-              
-              $repo = $em->getRepository('P4BookingBundle:Price');
-              
-              //fixe l'interval de temps qui définit le prix du billet
-              $birthdate = $ticket->getBirthDate();
-              $Interval = $today->diff($birthdate);
-              $Interval = $Interval->format('%Y');
-              
-              //créé la variable amount de la commande. (entité book)
-              $amount = $book->getAmount();
-       
-              if($Interval <4)
-              {
-                $type ="4";
-                $ticketprice = $repo->findPrice($type);
-                $book->setAmount($amount + $ticketprice);    
-              }
-              elseif($ticket->getDiscount() == true)
-              {   
-                  $type = 'true';
-                  $ticketprice = $repo->findPrice($type);
-                  $book->setAmount($amount + $ticketprice);
-                 
-              }
-              else
-              {
-                  switch(true){
-                      case $Interval<12:
-                          $type ="12";
-                          $ticketprice = $repo->findPrice($type);
-                          $book->setAmount($amount + $ticketprice);
-                          break;
-                      
-                      case $Interval<60:
-                          $type ="60";
-                          $ticketprice = $repo->findPrice($type);
-                          $book->setAmount($amount + $ticketprice);
-                          break;
-                      
-                      case $Interval>=60:
-                          $type ="+60";
-                          $ticketprice = $repo->findPrice($type);
-                          $book->setAmount($amount + $ticketprice);
-                          break;
-                  }
-              }
-  
-          }
-        }
+        $repo = $this
+                ->getDoctrine()
+                ->getManager()
+                ->getRepository('P4BookingBundle:Books');
+        
+        $book = $repo->find($id);
+        
+        $message = (new \Swift_Message('Validation'))
+        ->setFrom('hlouahem@gmail.com')
+        ->setTo($book->getMail())
+        ->setBody(
+            $this->renderView(
+                'P4BookingBundle:Booking:Emails/mailer.html.twig',
+                array('book' => $book)
+            ),
+            'text/html'
+        );
+
+        $mailer = $this->get('mailer');
+        $mailer->send($message);
+        var_dump($mailer);
+        var_dump($message);
+
+         return $this->redirectToRoute('p4_booking_homepage');
     }
     
 }

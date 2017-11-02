@@ -23,8 +23,8 @@ class BooksType extends AbstractType
         $builder->add('date', DateType::class, array(    
                     'widget' => 'single_text',
                     'html5' => false,
-                    'data_class' => 'DateTime',
-                    'format' => 'yyyy-MM-dd'
+                    
+                    'format' => 'dd/mm/yyyy'
                     ))
                 ->add('mail', EmailType::class)
                 ->add('name', TextType::class)
@@ -32,6 +32,7 @@ class BooksType extends AbstractType
                 ->add('country', CountryType::class)
                 ->add('ticket', CollectionType::class, array(
                     'entry_type' => TicketsType::class,
+                 
                     'allow_add' => true,
                     'allow_delete' => false
                 ))

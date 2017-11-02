@@ -35,3 +35,6 @@ services:
     #         $someArgument: 'some_value'
     CheckSchedule:
         class: P4\BookingBundle\CheckSchedule
+        
+    CheckPrice:
+        class: P4\BookingBundle\CheckPrice
