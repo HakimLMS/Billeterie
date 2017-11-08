@@ -9,7 +9,7 @@
 
 {% block main %}
     {% for message in app.session.flashbag.get('fullbookeddate') %}
-            <div class="flash-notice">
+             <div class="alert alert-danger" role="alert">
                 {{ message }}
             </div>
     {% endfor %}
@@ -71,8 +71,8 @@
 {% endblock %}
 {% block script %}
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.9.2/i18n/jquery.ui.datepicker-fr.min.js'></script>
-    <script src='../public/js/booking.js'></script>
-    <script src='../public/js/datepicker.js'></script>
+    <script src='{{ asset('js/booking.js') }}'></script>
+    <script src='{{ asset('js/datepicker.js') }}'></script>
     
     
 {% endblock %}

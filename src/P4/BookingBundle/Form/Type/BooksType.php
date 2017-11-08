@@ -24,7 +24,7 @@ class BooksType extends AbstractType
                     'widget' => 'single_text',
                     'html5' => false,
                     
-                    'format' => 'dd/mm/yyyy'
+                    'format' => 'dd/MM/yyyy'
                     ))
                 ->add('mail', EmailType::class)
                 ->add('name', TextType::class)

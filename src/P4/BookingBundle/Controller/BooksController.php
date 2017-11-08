@@ -9,7 +9,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use P4\BookingBundle\Form\Type\BooksType;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Swift_Image;
 use Stripe;
+
 /**
  * Book controller.
  *
@@ -25,164 +28,57 @@ class BooksController extends Controller
      */
     public function indexAction()
     {
+        
+        
         $em = $this->getDoctrine()->getManager();
 
-        $books = $em->getRepository('P4BookingBundle:Books')->findAll();
-
-        return $this->render('P4BookingBundle:Booking:index.html.twig', array(
-            'books' => $books,
-        ));
+        return $this->render('P4BookingBundle:Booking:home.html.twig');
     }
 
-    /**
+  /**
      * Creates a new book entity.
      *
      * @Route("/book", name="books_new")
      * @Method({"POST"})
      */
     public function newAction(Request $request)
-    {        
+    {   
+                
+        $session = new Session();
+        
         $book = new Books();
         $form = $this->get('form.factory')->create(BooksType::class,$book);
-        $em = $this->getDoctrine()->getManager();
-        
-        //price fixing
-        
+
         // form handle
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid())
         {
             //utilisation service checkschedule
             $checkschedule = $this->container->get('p4_booking.CheckSchedule');
             $x = $checkschedule->isFree($book);
-            
             //utilisation service checktype
-            $checktype = $this->container->get('p4_booking.CheckPrice');
-           
-            
+            $checktype = $this->container->get('p4_booking.CheckPrice');            
             
             $flash = $this->get('session')->getFlashBag();
-            
+         
             if ( $x === true )
-            {
-                
+            {       
                $flash->add('fullbookeddate', 'Le date selectionnée pour votre reservation n\'est plus disponible.');
                return $this->redirectToRoute('p4_booking_books');
             }
 
-                $checktype->amountType($book);
-                $formticket = clone $book->getTicket(); 
-                $book->getTicket()->clear();
-
-                // 1/2 flush book
-                $em->persist($book);
-                $em->flush();
-
-                // 2/2 flush ticket
-                foreach( $formticket as $t)
-                {    
-                    $t->setBooks($book);
-                    $t->setDate($book->getDate());
-                    $book->addTicket($t);
-                    $em->persist($t);
-                }
-                
-               $em->flush();
-               $flash->add('successfullbookdate', 'Votre commande a bien été enregistrée');
-               
-               $id = $book->getId();
-               
-               return $this->redirectToRoute('p4_booking_payements', array('id' => $id));          
+            $checktype->amountType($book);
+             
+            $session->set('book', $book);
+            
+            return $this->redirectToRoute('p4_booking_payements');          
         }
         return $this->render('P4BookingBundle:Booking:booking.html.twig', array('book' => $book, 'form' => $form->createView()));
     }
 
-    /**
-     * Finds and displays a book entity.
-     *
-     * @Route("/{id}", name="books_show")
-     * @Method("GET")
-     */
-    public function showAction(Books $book)
-    {
-        $deleteForm = $this->createDeleteForm($book);
-
-        return $this->render('books/show.html.twig', array(
-            'book' => $book,
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
-
-    /**
-     * Displays a form to edit an existing book entity.
-     *
-     * @Route("/{id}/edit", name="books_edit")
-     * @Method({"GET", "POST"})
-     */
-    public function editAction(Request $request, Books $book)
-    {
-        $deleteForm = $this->createDeleteForm($book);
-        $editForm = $this->createForm('P4\BookingBundle\Form\BooksType', $book);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('books_edit', array('id' => $book->getId()));
-        }
-
-        return $this->render('books/edit.html.twig', array(
-            'book' => $book,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
-
-    /**
-     * Deletes a book entity.
-     *
-     * @Route("/{id}", name="books_delete")
-     * @Method("DELETE")
-     */
-    public function deleteAction(Request $request, Books $book)
-    {
-        $form = $this->createDeleteForm($book);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($book);
-            $em->flush();
-        }
-
-        return $this->redirectToRoute('books_index');
-    }
-
-    /**
-     * Creates a form to delete a book entity.
-     *
-     * @param Books $book The book entity
-     *
-     * @return \Symfony\Component\Form\Form The form
-     */
-    private function createDeleteForm(Books $book)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('books_delete', array('id' => $book->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
-    }
-    
     public function payAction(Request $request)
     {
-        $id = $_GET['id'];
-        
-        $repo = $this
-                ->getDoctrine()
-                ->getManager()
-                ->getRepository('P4BookingBundle:Books');
-        
-        $book = $repo->find($id);
+        $session = new Session();
+        $book = $session->get('book');
         
         return $this->render('P4BookingBundle:Booking:stripepayements.html.twig', array('book' => $book));
     }
@@ -193,55 +89,71 @@ class BooksController extends Controller
         Stripe\Stripe::setApiKey("sk_test_W6WXT55oRpahbFejPnk2NWMl");
         
         $token = $_POST['stripeToken'];
-        $id = $_POST['b-id'];
-        
-        $repo = $this
-                ->getDoctrine()
-                ->getManager()
-                ->getRepository('P4BookingBundle:Books');
-        
-        $book = $repo->find($id);
-        
-        // Charge the user's card:
+        $session = new Session();
+        $book = $session->get('book');
+         $flash = $this->get('session')->getFlashBag();
+        try{
         $charge = Stripe\Charge::create(array(
         "amount" => $book->getAmount() * 100,
         "currency" => "eur",
-        "description" => "Ticket Charge",
+        "description" => "Billeterie du Louvre",
         "source" => $token,
         ));
+        }
+         catch(\Stripe\Error\Card $e) {
+        // Since it's a decline, \Stripe\Error\Card will be caught
+        $body = $e->getJsonBody();
+        $err  = $body['error'];
+       
+
+        $flash->add('errorstripe', 'Votre carte a été déclinée, veuillez recommencer la saisie avec une carte valide.');
+        return $this->redirectToRoute('p4_booking_payements');
+      } 
+        catch (\Stripe\Error\Base $e) {
+           $flash->add('errorstripe', 'Une erreure est survenu lors de votre paiement, nous vous invitons à recommencer.');
+           return $this->redirectToRoute('p4_booking_payements');
+      } catch (Exception $e) {
+            $flash->add('errorstripe', 'Une erreure est survenu lors de votre paiement, nous vous invitons à réitérer votre commande ultérieurement.');
+           return $this->redirectToRoute('p4_booking_payements');
+      }
       
       
     
-    return $this->redirectToRoute('p4_booking_validation', array('id' => $id));
+    return $this->redirectToRoute('p4_booking_validation');
     }
     
     public function validationAction(Request $request)
     {
-        $id = $_GET['id'];
+        $session = new Session();      
+        $book = $session->get('book');
         
-        $repo = $this
-                ->getDoctrine()
-                ->getManager()
-                ->getRepository('P4BookingBundle:Books');
-        
-        $book = $repo->find($id);
-        
-        $message = (new \Swift_Message('Validation'))
-        ->setFrom('hlouahem@gmail.com')
-        ->setTo($book->getMail())
+        $message = (new \Swift_Message('Validation'));
+        $mail = $book->getMail();$data['image_src'] = $message->embed(Swift_Image::fromPath('../public/img/louvre.png'));
+        $message
+        ->setFrom(['hlouahem@gmail.com'=>'Billetterie du Louvre'])
+        ->setTo($mail)
         ->setBody(
             $this->renderView(
                 'P4BookingBundle:Booking:Emails/mailer.html.twig',
-                array('book' => $book)
+                array('book' => $book, 'data'=> $data)
             ),
             'text/html'
         );
-
+        
+        
+        
         $mailer = $this->get('mailer');
         $mailer->send($message);
-        var_dump($mailer);
-        var_dump($message);
-
+        if($book != null){
+        //utilisation service SaveBook
+        $savebook = $this->container->get('p4_booking.SaveBook');
+        $savebook->saveAll($book);
+        }
+        
+        
+      
+        $session->getFlashBag()->add('successBook', 'Votre commande à bien été enregistrée');
+        
          return $this->redirectToRoute('p4_booking_homepage');
     }
     

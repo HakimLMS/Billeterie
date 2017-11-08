@@ -1,4 +1,6 @@
 <?php>
+
+Namespace P4\BookingBundle\config;
 require_once('vendor/autoload.php');
 
 $stripe = array(

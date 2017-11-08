@@ -5,7 +5,7 @@
 
 {% block body_html %}
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-  <div style="background-color: #C0C0C0;"><a href="http://www.louvre.fr/"><img src="../public/img/louvre.png" alt="header"></a></div>
+  <div style="background-color: #C0C0C0;"><a href="http://www.louvre.fr/"><img src="{{ data.image_src }}" alt="header"></a></div>
     {% block main %}
         
         <div class="container">

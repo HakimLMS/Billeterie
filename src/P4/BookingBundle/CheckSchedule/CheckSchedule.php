@@ -19,6 +19,7 @@ class CheckSchedule
         
         $scheduled = $repo->findDate($date);
         var_dump($scheduled);
+
         
         if ($scheduled)
         {

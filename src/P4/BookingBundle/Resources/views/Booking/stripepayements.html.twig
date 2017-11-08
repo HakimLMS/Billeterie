@@ -3,8 +3,13 @@
 <div class="container-fluid py-3">
     <div class="row">
         <div class="col-12 col-sm-8 col-md-6 col-lg-4 mx-auto">
+            {% for message in app.session.flashbag.get('errorstripe') %}
+             <div class="alert alert-danger" role="alert">
+                {{ message }}
+            </div>
+            {% endfor %}
             <div id="pay-invoice" class="card">
-
+                
                    
                 <form action="{{path('p4_booking_charge')}}" method="post" novalidate="novalidate" id="payment-form">
                    

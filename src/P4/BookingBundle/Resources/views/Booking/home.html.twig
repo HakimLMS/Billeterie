@@ -1,0 +1,84 @@
+{% extends 'P4BookingBundle::layout.html.twig' %}
+{% block main %}
+    <div class="container" >
+        {% for message in app.session.flashbag.get('successBook') %}
+            <div class="alert alert-success" role="alert">
+               {{ message }}
+            </div>
+        {% endfor %}
+       <div class=' col-md-12'>
+           <h3 class='title'>Accueil</h3>      
+       </div>
+        
+        <div class="col-md-12">
+            <div class="card text-center">
+                <div class="card-body">
+                  <h5 class="car-title">Bienvenue</h5>
+                  <p class="card-text">L'équipe du musée du Louvre vous souhaite une bonne navigation sur la plateforme de réservation du Musée du Louvre.</p>
+                  <a href="{{path('p4_booking_books')}}" class="btn btn-primary">Réservez-votre billet</a>
+                </div>
+            </div>
+        </div>
+                
+        <div class="col-md-12" style="margin-top: 50px;">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="card border-dark mb-3">
+                        <div class="card-body text-dark">
+                        <h6 class="card-title"> Les tarfis </h6>
+                        <ul>
+                            <li>Normal (dès 12 ans):  16€</li>
+                            <li>Enfant (4ans à 12ans): 8€</li>
+                            <li>Senior (60ans et +): 12€</li>
+                            <li>Réduit (Sous conditions*): 10€</li>
+                        </ul>
+                        <p>*réservé aux catégories suivantes: étudiant, employé du musée, d’un service du Ministère de la Culture, militaire…</p>
+                        
+                        <h6 class="card-title"> Les moyens de paiements</h6>
+                        <ul>
+                            <li>EuroCard</li>
+                            <li>MasterCard</li>
+                        </ul>
+                        <p>Les données du paiement en ligne sont sécurisées grâce à notre partenaire Stripe.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                </div>
+                 <div class="col-md-5">                                    
+                    <div class="card border-dark mb-3">
+                        <div class="card-body text-dark">
+                     <h6 class="card-title"> Les billets </h6>
+                     <ul>
+                         <li>Journée* : entrèe dès l'ouverture</li>
+                         <li>Demi-journée : entrée dès 14h</li>
+                     </ul>
+                     <p>*Commande de billet Journée impossible pour le jour même après 14h .</p>
+
+                     <h6 class="card-title" > Les horraires </h6>
+                     <ul>
+                         <li>Fermés les Mardis</li>
+                         <li>Tout les jours de 9h à 18h30*</li>
+                         <li>Nocturnes tout les Mercredis et Vendredis jusqu'à 22h**</li>
+                     </ul>
+                     <p>*/** l'évacutation des salles commencera 30 min avant les heures de fermeture.</p><br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-12">
+            <div class="card text-white bg-dark mb-3" style="background-color: black;">
+                <div class="card-header text-center" style="background-color: #f0ad4e;"><strong>Plan Vigipirate</strong></div>
+                <div class="card-body">
+                    <h4 class="card-title text-center">Attention</h4>
+                  <img class="rounded mx-auto d-block" src="{{ asset('img/vigipi.jpg') }}"><br>
+                  <p class="card-text">A la suite des attentats survenus à Paris dans la nuit du vendredi 13 au samedi 14 novembre 2015, et afin d’assurer la sécurité des visiteurs, le musée du Louvre applique les mesures préventives décidées par le gouvernement pour les administrations publiques.
+              Le musée du Louvre est ouvert dans les conditions habituelles. Il est recommandé de ne pas venir au musée avec des sacs et des valises. Les valises et sacs de grande contenance sont interdits.</p>
+                </div>
+              </div>    
+        </div>
+        
+    </div>
+{% endblock %}
