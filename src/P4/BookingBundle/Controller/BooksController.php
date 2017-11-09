@@ -128,14 +128,14 @@ class BooksController extends Controller
         $book = $session->get('book');
         
         $message = (new \Swift_Message('Validation'));
-        $mail = $book->getMail();$data['image_src'] = $message->embed(Swift_Image::fromPath('../public/img/louvre.png'));
+        $mail = $book->getMail();$image = 'http://hakimlouahem.com/public/img/louvre.png';
         $message
         ->setFrom(['hlouahem@gmail.com'=>'Billetterie du Louvre'])
         ->setTo($mail)
         ->setBody(
             $this->renderView(
                 'P4BookingBundle:Booking:Emails/mailer.html.twig',
-                array('book' => $book, 'data'=> $data)
+                array('book' => $book, 'image'=> $image)
             ),
             'text/html'
         );

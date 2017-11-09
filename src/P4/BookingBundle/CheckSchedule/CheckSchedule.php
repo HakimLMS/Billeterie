@@ -12,13 +12,13 @@ class CheckSchedule
     public function isFree(\P4\BookingBundle\Entity\Books $book)
     {
         $date = $book->getDate();
-        var_dump($date);
+        
         $count = count($book->getTicket());
         $oldcount;
         $repo= $this->repo;
         
         $scheduled = $repo->findDate($date);
-        var_dump($scheduled);
+        
 
         
         if ($scheduled)
