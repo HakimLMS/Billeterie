@@ -10,7 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use P4\BookingBundle\Form\Type\BooksType;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Swift_Image;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Stripe;
 
 /**
@@ -28,10 +28,6 @@ class BooksController extends Controller
      */
     public function indexAction()
     {
-        
-        
-        $em = $this->getDoctrine()->getManager();
-
         return $this->render('P4BookingBundle:Booking:home.html.twig');
     }
 
@@ -144,7 +140,7 @@ class BooksController extends Controller
         
         $mailer = $this->get('mailer');
         $mailer->send($message);
-        if($book != null){
+        if($book !== null){
         //utilisation service SaveBook
         $savebook = $this->container->get('p4_booking.SaveBook');
         $savebook->saveAll($book);

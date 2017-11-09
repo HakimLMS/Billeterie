@@ -21,7 +21,7 @@ class CheckPrice
        
        $totalAmount= 0;
        
-       if($tickets != null)
+       if($tickets !== null)
        {
            
            //définit le lien entre type du ticekt et le type de tarrificiation. 
@@ -42,7 +42,7 @@ class CheckPrice
               {
                 $type ="4";  
               }
-              elseif($ticket->getDiscount() == true)
+              elseif($ticket->getDiscount() === true)
               {   
                   $type = 'true';                 
               }

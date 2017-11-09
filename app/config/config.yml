@@ -44,9 +44,9 @@ doctrine:
         driver: pdo_mysql
         host: 'db675085602.db.1and1.com'
         port: '3306'
-        dbname: 'db675085602'
-        user: 'dbo675085602'
-        password: 'Hakim1989!'
+        dbname: "%database_name%"
+        user: "%database_user%"
+        password: "%database_password%"
         charset: UTF8
         # if using pdo_sqlite as your database driver:
         #   1. add the path in parameters.yml
