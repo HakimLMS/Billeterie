@@ -70,6 +70,12 @@ class Books
      */
     private $amount;
 
+    /**
+     * @var string
+     * 
+     * @ORM\Column(name="serial", type="string", length=255)
+     */
+    private $serial;
 
     /**
      * Get id
@@ -275,6 +281,34 @@ class Books
     {
         return $this->tickets;
     }
+    
+    /**
+     * Set serial
+     * 
+     * @return Tickets
+     */
+    public function setSerial()
+    {
+        $n = $this->name;
+        $s = $this->surname;
+        $d = $this->date;
+        
+        $base = $n + $s + $d->format('dd/MM');
+        $serial = sha1($base);
+        
+        $this->serial = $serial;
+    }
+    
+    /**
+     * Get serial
+     * 
+     * @return string
+     */
+    public function getSerial()
+    {
+        return $this->serial;
+    }
+            
     
 
 }

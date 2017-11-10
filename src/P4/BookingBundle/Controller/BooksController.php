@@ -122,7 +122,8 @@ class BooksController extends Controller
     {
         $session = new Session();      
         $book = $session->get('book');
-        
+        $book->setSerial();
+
         $message = (new \Swift_Message('Validation'));
         $mail = $book->getMail();$image = 'http://hakimlouahem.com/public/img/louvre.png';
         $message

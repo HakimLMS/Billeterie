@@ -75,8 +75,9 @@ class Tickets
      * @ORM\Column(name="surname", type="string", length=255)
      */
     private $surname;
-
     
+
+
     /**
      * Get id
      *
@@ -254,4 +255,4 @@ class Tickets
     {
         return $this->date;
     }
-}
+}    

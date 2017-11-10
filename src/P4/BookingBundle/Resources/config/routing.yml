@@ -17,3 +17,7 @@ p4_booking_charge:
 p4_booking_validation:
     path: /validation
     defaults: {_controller : P4BookingBundle:Books:validation }
+    
+p4_booking_mail:
+    path: /mail
+    defaults: {_controller: P4BookingBundle:Books:mail }
