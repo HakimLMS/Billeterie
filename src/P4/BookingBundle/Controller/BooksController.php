@@ -42,6 +42,7 @@ class BooksController extends Controller
                 
         $session = new Session();
         
+        
         $book = new Books();
         $form = $this->get('form.factory')->create(BooksType::class,$book);
 
@@ -107,7 +108,7 @@ class BooksController extends Controller
 
                 $idBook = $book->getId();
                 $session->set('idBook', $idBook);
-                 $session->remove('book'); 
+
 
                 }
         
@@ -137,15 +138,11 @@ class BooksController extends Controller
     public function validationAction(Request $request)
     {
 
-        $session = new Session();
-        
-        if ($session->get('book') !== null)
-        {
-          $session->remove('book');  
-        }
-        
-        
+        $session = new Session();    
         $id = $session->get('idBook');
+        
+        $session->clear();
+        
         $book = $this->getDoctrine()
                 ->getRepository(Books::class)
                 ->find($id);
