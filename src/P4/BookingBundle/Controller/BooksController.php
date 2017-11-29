@@ -87,14 +87,27 @@ class BooksController extends Controller
         $token = $_POST['stripeToken'];
         $session = new Session();
         $book = $session->get('book');
-         $flash = $this->get('session')->getFlashBag();
-        try{
+        $book->setSerial();
+        $flash = $this->get('session')->getFlashBag();
+        
+         try{
         $charge = Stripe\Charge::create(array(
         "amount" => $book->getAmount() * 100,
         "currency" => "eur",
         "description" => "Billeterie du Louvre",
         "source" => $token,
         ));
+        
+        if($book !== null){
+        //utilisation service SaveBook
+        $savebook = $this->container->get('p4_booking.SaveBook');
+        $savebook->saveAll($book);
+        
+        //suppression de la var session book
+        $id = $book->getId(); $session->set('id', $id);
+        $session->remove('book');
+        }
+        
         }
          catch(\Stripe\Error\Card $e) {
         // Since it's a decline, \Stripe\Error\Card will be caught
@@ -121,8 +134,12 @@ class BooksController extends Controller
     public function validationAction(Request $request)
     {
         $session = new Session();      
-        $book = $session->get('book');
-        $book->setSerial();
+        $id = $session->get('id');
+        var_dump($id);
+        $book = $this->getDoctrine()
+                ->getRepository(Books::class)
+                ->find($id);
+        
 
         $message = (new \Swift_Message('Validation'));
         $mail = $book->getMail();$image = 'http://hakimlouahem.com/public/img/louvre.png';
@@ -135,19 +152,11 @@ class BooksController extends Controller
                 array('book' => $book, 'image'=> $image)
             ),
             'text/html'
-        );
-        
+        );      
         
         
         $mailer = $this->get('mailer');
         $mailer->send($message);
-        if($book !== null){
-        //utilisation service SaveBook
-        $savebook = $this->container->get('p4_booking.SaveBook');
-        $savebook->saveAll($book);
-        }
-        
-        
       
         $session->getFlashBag()->add('successBook', 'Votre commande à bien été enregistrée');
         
