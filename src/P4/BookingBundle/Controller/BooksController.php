@@ -135,7 +135,6 @@ class BooksController extends Controller
     {
         $session = new Session();      
         $id = $session->get('id');
-        var_dump($id);
         $book = $this->getDoctrine()
                 ->getRepository(Books::class)
                 ->find($id);
