@@ -85,28 +85,31 @@ class BooksController extends Controller
         Stripe\Stripe::setApiKey("sk_test_W6WXT55oRpahbFejPnk2NWMl");
         
         $token = $_POST['stripeToken'];
+        
         $session = new Session();
         $book = $session->get('book');
         $book->setSerial();
         $flash = $this->get('session')->getFlashBag();
         
-         try{
-        $charge = Stripe\Charge::create(array(
-        "amount" => $book->getAmount() * 100,
-        "currency" => "eur",
-        "description" => "Billeterie du Louvre",
-        "source" => $token,
-        ));
-        
-        if($book !== null){
-        //utilisation service SaveBook
-        $savebook = $this->container->get('p4_booking.SaveBook');
-        $savebook->saveAll($book);
-        
-        //suppression de la var session book
-        $id = $book->getId(); $session->set('id', $id);
-        $session->remove('book');
-        }
+        try{
+                $charge = Stripe\Charge::create(array(
+                "amount" => $book->getAmount() * 100,
+                "currency" => "eur",
+                "description" => "Billeterie du Louvre",
+                "source" => $token,
+                ));
+
+                if($book !== null){
+                    
+                //utilisation service SaveBook
+                $savebook = $this->container->get('p4_booking.SaveBook');
+                $savebook->saveAll($book);
+
+                $idBook = $book->getId();
+                $session->set('idBook', $idBook);
+                 $session->remove('book'); 
+
+                }
         
         }
          catch(\Stripe\Error\Card $e) {
@@ -133,8 +136,16 @@ class BooksController extends Controller
     
     public function validationAction(Request $request)
     {
-        $session = new Session();      
-        $id = $session->get('id');
+
+        $session = new Session();
+        
+        if ($session->get('book') !== null)
+        {
+          $session->remove('book');  
+        }
+        
+        
+        $id = $session->get('idBook');
         $book = $this->getDoctrine()
                 ->getRepository(Books::class)
                 ->find($id);
